@@ -1,26 +1,67 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import SendMessage from "./components/SendMessage";
+import GetMessage from "./components/GetMessage";
+import MessageContext from './contexts/message.context';
+import {Provider} from 'react-redux';
+import store from "./redux/store";
+import TodoList from './components/TodoList';
+import Loader from './components/Loader';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+class App extends React.Component {
+    state = {
+        contextMessage: 'hello from context'
+    }
+
+    changeContext = (newValueForProvider) => {
+        this.setState({
+            contextMessage: newValueForProvider
+        })
+    }
+
+    render() {
+        return (
+            <Provider store={store}>
+                <div className="App mt-5">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <h1 className="text-center">
+                                    Component communication
+                                </h1>
+                            </div>
+
+                            <MessageContext.Provider value={
+                                {
+                                    message: this.state.contextMessage,
+                                    setMessage: this.changeContext
+                                }
+
+                            }>
+                                <div className="col-6">
+                                    <SendMessage />
+                                </div>
+
+                                <div className="col-6">
+                                    <GetMessage />
+                                </div>
+
+                                <div className="col-6">
+                                    <Loader />
+                                    <TodoList />
+                                </div>
+                            </MessageContext.Provider>
+
+
+                        </div>
+                    </div>
+                </div>
+            </Provider>
+
+        )
+    }
 }
 
 export default App;
